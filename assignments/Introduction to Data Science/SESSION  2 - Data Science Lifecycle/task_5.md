@@ -1,0 +1,7 @@
+# Feature Engineering Ideas for Online Food Orders
+
+| **New Feature** | **How it is created** | **How it helps the Data Science model** |
+|---|---|---|
+| **Delivery Speed Category** | Use the `delivery time` column to create categories such as **Fast, Medium, and Slow**. For example, delivery under 30 minutes can be Fast, 30–60 minutes Medium, and above 60 minutes Slow. | This feature helps the model understand different delivery-speed patterns. It can be useful for predicting **customer ratings, delivery delays, or customer satisfaction**. |
+| **Restaurant Average Rating** | Calculate the **average rating received by each restaurant** from its previous orders. For example, if a restaurant has ratings of 4, 5, 4, and 3, its average rating is 4.0. | This gives the model information about the restaurant's **historical performance and customer satisfaction**. It can help predict the rating of future orders or identify restaurants that usually provide better experiences. |
+| **Cuisine Popularity** | Count the **total number of orders for each cuisine**. For example, if Indian cuisine has 500 orders and Chinese cuisine has 300 orders, Indian cuisine is more popular in the dataset. | This helps the model understand **customer demand and ordering patterns** for different cuisines. It may also help identify whether popular cuisines are associated with longer delivery times or different customer ratings. |
