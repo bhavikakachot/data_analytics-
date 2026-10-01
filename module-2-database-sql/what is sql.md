@@ -387,8 +387,6 @@ select * from tbl_customers where name like  'a%';
 or
 select * from tbl_customers where name like  'b%';
 
-
-
 b) select customers name who's name end with 'h' character
 
 select * from tbl_customers where name like  '%h';
@@ -461,6 +459,14 @@ select sum(salary) as sumof_salary,department  from tbl_employee group by depart
 select DISTINCT(salary) from tbl_employee 
 ``` 
 
+# having ? 
+- having is used in group by 
+- having is filter data conditionally 
+- having always work with group by 
+
+```
+SELECT department, sum(salary) as sum_of_salary from tbl_employee group by department having sum_of_salary >=115000;
+```
 
 # sql function ? 
 
@@ -1100,3 +1106,228 @@ select studentid,name,age,adress,mobile, depname, collegename from tbl_students 
 select e.empid, e.name as employee_name , m.name as manager_name from tbl_employee e inner join tbl_employee m on e.manager_id=m.empid;
 
 ```
+
+
+
+## union join ?
+
+1. union join is combine of left join and right join  that is called union join 
+# create a scenario for union join 
+
+```
+select tbl_students.*, depname from tbl_students left join tbl_department on tbl_students.depid=tbl_department.depid
+union 
+select tbl_students.*, depname from tbl_students right join tbl_department on tbl_students.depid=tbl_department.depid;
+
+```
+
+# case when ?
+
+1. check a multiple case using case when 
+2. check a multiple case using case when and its is also check logic based case 
+
+```
+select name , salary , case when salary >=75000 then 'Higher erner'
+when salary >=50000 then 'Mediun earner' else 'lower earner'
+end as salary_earner from tbl_employee
+
+```
+
+# export data in excel *
+
+```
+employee.xlsx
+```
+
+# export data in chart 
+
+![alt text](image-7.png)
+
+
+# round | now | partition by
+
+1. ROUND()
+
+- Rounds a number to a specified number of decimal places.
+
+```
+SELECT ROUND(123.4567, 2);
+
+```
+2. NOW()
+- Returns the current date and time (commonly in MySQL).
+```
+SELECT NOW();
+
+```
+
+3. PARTITION BY
+
+- Used with window functions to divide rows into groups without collapsing them like GROUP BY.
+
+- For example, find each employee's salary and the average salary of their department:
+
+```
+SELECT
+    name,
+    department,
+    salary,
+    ROUND(AVG(salary) OVER (PARTITION BY department), 2) AS dept_avg_salary
+FROM tbl_employee;
+
+
+```
+# string function list in SQL 
+
+**Function**	                      **Purpose	Example**
+
+- LENGTH()	Finds length of string	LENGTH('Hello') → 5
+
+- UPPER()	Converts to uppercase	UPPER('hello') → HELLO
+
+- LOWER()	Converts to lowercase	LOWER('HELLO') → hello
+
+- CONCAT()	Joins strings	CONCAT('Hello', ' World')
+
+- SUBSTRING()	Extracts part of a string	SUBSTRING('Hello', 1, 3) → Hel
+
+- TRIM()	Removes spaces	TRIM(' Hello ') → Hello
+
+- REPLACE()	Replaces text	REPLACE('Hello World','World','SQL')
+
+- LEFT()	Gets characters from left	LEFT('Hello', 2) → He
+
+- RIGHT()	Gets characters from right	RIGHT('Hello', 2) → lo
+
+- INSTR()	Finds position of substring	INSTR('Hello','l') → 3
+
+
+**solutions**
+
+1. LENGTH() : 
+```
+select length('bhavika') from tbl_employee
+```
+
+2. UPPER() : 
+```
+select UPPER('bhavika') from tbl_employee
+```
+
+3. concate() : 
+```
+select concat('bhavika','dhruv','kalpit') from tbl_employee
+or
+select concat(name,' , ',age) from tbl_students
+
+```
+
+4. substring 
+
+```
+SELECT SUBSTRING('dhruv', 1,4);
+```
+5. Replace 
+
+```
+SELECT REPLACE('I love Brijesh', 'Brijesh', 'Nikul');
+
+```
+
+6. trim
+- trim is remove whitespace from tables of string or data
+- trim removed space in data 
+
+```
+select trim('         brij        ')
+
+```
+
+
+# trigger 10k data at once time 
+
+```
+INSERT INTO tbl_country (cname)
+SELECT CONCAT('Country_', n)
+FROM (
+    SELECT 
+        a.n + b.n * 10 + c.n * 100 + d.n * 1000 + 1 AS n
+    FROM
+        (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+         UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+    CROSS JOIN
+        (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+         UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+    CROSS JOIN
+        (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+         UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c
+    CROSS JOIN
+        (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+         UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d
+) AS numbers
+WHERE n <= 10000;
+
+```
+**or add random 10k data in tables**
+```
+INSERT INTO tbl_country (cname)
+SELECT CONCAT(
+    ELT(FLOOR(1 + RAND() * 10),
+        'India',
+        'USA',
+        'Canada',
+        'Australia',
+        'Germany',
+        'France',
+        'Japan',
+        'China',
+        'Brazil',
+        'UK'
+    ),
+    '_',
+    FLOOR(1000 + RAND() * 9000)
+)
+FROM (
+    SELECT 1
+    FROM information_schema.columns a
+    CROSS JOIN information_schema.columns b
+    LIMIT 10000
+) AS x;
+
+
+```
+
+# SQL with clause or CTE (common table expression)
+
+1. THe SQL **with** clause (common table express) or CTE defines  a temporary result set that can be used within query
+2. it is simplify complex SQL statements making them easier to read, manage and reuse there we create CTE.
+
+```
+with AvgSalaryCTE (averageValue) as (select AVG(salary) from tbl_employee)
+select empid,name,mobile,salary from tbl_employee where salary > (select averageValue from AVGSalaryCTE);
+
+```
+
+# question
+
+```
+Enable dynamic data refresh in your Excel sheet so that when new records are added to the 'Restaurants' table in SQL Server, you can update the Excel data with a single click.
+```
+
+**solutions**
+
+1. In Excel, go to Data → Get Data → From Database → From SQL Server Database.
+2. Connect to your SQL Server and select the Restaurants table.
+3. Load the data into Excel.
+4. Go to Data → Queries & Connections.
+5. Right-click the query → Properties.
+6. Enable Refresh data when opening the file if desired.
+7. To update manually with one click, use Data → Refresh All.
+
+
+Now, whenever new records are added to the SQL Server Restaurants table, clicking Refresh All pulls the latest records into Excel.
+
+If you want, I can also show you how to add a “Refresh Data” button directly inside the Excel sheet.
+
+
+![alt text](image-10.png)
