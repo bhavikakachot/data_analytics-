@@ -29,3 +29,10 @@ a=str(10)
 b=str(20)
 c=a+b
 print(c)
+
+# use string formator
+print("-----------------------")
+name="bhavika"
+a=10
+b=10.5
+print(f"{name}{"\n"}{a}{"\n"}{b}")
